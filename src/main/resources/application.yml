@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: "review-service"
+  cloud:
+    kubernetes:
+      config:
+        namespace: bistroad-prod
