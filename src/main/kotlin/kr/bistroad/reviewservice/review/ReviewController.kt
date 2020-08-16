@@ -7,12 +7,10 @@ import java.util.*
 class ReviewController(
         private val reviewService: ReviewService
 ) {
-    @GetMapping("/stores/{storeId}/items/{itemId}/reviews/{id}")
+    @GetMapping("/stores/{storeId}/items/{itemId}/reviews/{reviewId}")
     fun getReview(
-            @PathVariable storeId: UUID,
-            @PathVariable itemId: UUID,
-            @PathVariable id: UUID
-    ) = reviewService.readReview(storeId, itemId, id)
+            pathIds: ReviewDto.PathIds
+    ) = reviewService.readReview(pathIds)
 
     @GetMapping("/stores/{storeId}/items/{itemId}/reviews")
     fun getReviews(
@@ -27,18 +25,14 @@ class ReviewController(
             @RequestBody dto: ReviewDto.CreateReq
     ) = reviewService.createReview(storeId, itemId, dto)
 
-    @PatchMapping("/stores/{storeId}/items/{itemId}/reviews/{id}")
+    @PatchMapping("/stores/{storeId}/items/{itemId}/reviews/{reviewId}")
     fun patchReview(
-            @PathVariable storeId: UUID,
-            @PathVariable itemId: UUID,
-            @PathVariable id: UUID,
+            pathIds: ReviewDto.PathIds,
             @RequestBody dto: ReviewDto.PatchReq
-    ) = reviewService.patchReview(storeId, itemId, id, dto)
+    ) = reviewService.patchReview(pathIds, dto)
 
-    @DeleteMapping("/stores/{storeId}/items/{itemId}/reviews/{id}")
+    @DeleteMapping("/stores/{storeId}/items/{itemId}/reviews/{reviewId}")
     fun deleteReview(
-            @PathVariable storeId: UUID,
-            @PathVariable itemId: UUID,
-            @PathVariable id: UUID
-    ) = reviewService.deleteReview(storeId, itemId, id)
+            pathIds: ReviewDto.PathIds
+    ) = reviewService.deleteReview(pathIds)
 }
