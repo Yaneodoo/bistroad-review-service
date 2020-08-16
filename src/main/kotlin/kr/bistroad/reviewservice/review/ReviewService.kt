@@ -20,10 +20,10 @@ class ReviewService(
         return ReviewDto.CruRes.fromEntity(review)
     }
 
-    fun readReview(pathIds: ReviewDto.PathIds): ReviewDto.CruRes {
+    fun readReview(pathIds: ReviewDto.PathIds): ReviewDto.CruRes? {
         val review = reviewRepository.findByStoreIdAndItemIdAndId(
                 pathIds.storeId, pathIds.itemId, pathIds.reviewId
-        ) ?: error("Review not found")
+        ) ?: return null
         return ReviewDto.CruRes.fromEntity(review)
     }
 
