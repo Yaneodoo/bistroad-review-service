@@ -3,12 +3,6 @@ package kr.bistroad.reviewservice.review
 import java.util.*
 
 interface ReviewDto {
-    data class PathIds(
-            val storeId: UUID,
-            val itemId: UUID,
-            val reviewId: UUID
-    )
-
     data class CreateReq(
             val writerId: UUID,
             val orderId: UUID,

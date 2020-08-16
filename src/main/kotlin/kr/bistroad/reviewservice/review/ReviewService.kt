@@ -20,10 +20,8 @@ class ReviewService(
         return ReviewDto.CruRes.fromEntity(review)
     }
 
-    fun readReview(pathIds: ReviewDto.PathIds): ReviewDto.CruRes? {
-        val review = reviewRepository.findByStoreIdAndItemIdAndId(
-                pathIds.storeId, pathIds.itemId, pathIds.reviewId
-        ) ?: return null
+    fun readReview(storeId: UUID, itemId: UUID, id: UUID): ReviewDto.CruRes? {
+        val review = reviewRepository.findByStoreIdAndItemIdAndId(storeId, itemId, id) ?: return null
         return ReviewDto.CruRes.fromEntity(review)
     }
 
@@ -32,10 +30,8 @@ class ReviewService(
                 .map(ReviewDto.CruRes.Companion::fromEntity)
     }
 
-    fun patchReview(pathIds: ReviewDto.PathIds, dto: ReviewDto.PatchReq): ReviewDto.CruRes {
-        val review = reviewRepository.findByStoreIdAndItemIdAndId(
-                pathIds.storeId, pathIds.itemId, pathIds.reviewId
-        ) ?: error("Review not found")
+    fun patchReview(storeId: UUID, itemId: UUID, id: UUID, dto: ReviewDto.PatchReq): ReviewDto.CruRes {
+        val review = reviewRepository.findByStoreIdAndItemIdAndId(storeId, itemId, id) ?: error("Review not found")
 
         if (dto.contents != null) review.contents = dto.contents
         if (dto.stars != null) review.stars = dto.stars
@@ -44,10 +40,8 @@ class ReviewService(
         return ReviewDto.CruRes.fromEntity(review)
     }
 
-    fun deleteReview(pathIds: ReviewDto.PathIds): Boolean {
-        val numDeleted = reviewRepository.removeByStoreIdAndItemIdAndId(
-                pathIds.storeId, pathIds.itemId, pathIds.reviewId
-        )
+    fun deleteReview(storeId: UUID, itemId: UUID, id: UUID): Boolean {
+        val numDeleted = reviewRepository.removeByStoreIdAndItemIdAndId(storeId, itemId, id)
         return numDeleted > 0
     }
 }

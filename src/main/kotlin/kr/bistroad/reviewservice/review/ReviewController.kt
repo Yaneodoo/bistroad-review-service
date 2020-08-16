@@ -9,8 +9,8 @@ class ReviewController(
 ) {
     @GetMapping("/stores/{storeId}/items/{itemId}/reviews/{reviewId}")
     fun getReview(
-            pathIds: ReviewDto.PathIds
-    ) = reviewService.readReview(pathIds)
+            pathIds: PathIds
+    ) = reviewService.readReview(pathIds.storeId!!, pathIds.itemId!!, pathIds.reviewId!!)
 
     @GetMapping("/stores/{storeId}/items/{itemId}/reviews")
     fun getReviews(
@@ -27,12 +27,18 @@ class ReviewController(
 
     @PatchMapping("/stores/{storeId}/items/{itemId}/reviews/{reviewId}")
     fun patchReview(
-            pathIds: ReviewDto.PathIds,
+            pathIds: PathIds,
             @RequestBody dto: ReviewDto.PatchReq
-    ) = reviewService.patchReview(pathIds, dto)
+    ) = reviewService.patchReview(pathIds.storeId!!, pathIds.itemId!!, pathIds.reviewId!!, dto)
 
     @DeleteMapping("/stores/{storeId}/items/{itemId}/reviews/{reviewId}")
     fun deleteReview(
-            pathIds: ReviewDto.PathIds
-    ) = reviewService.deleteReview(pathIds)
+            pathIds: PathIds
+    ) = reviewService.deleteReview(pathIds.storeId!!, pathIds.itemId!!, pathIds.reviewId!!)
+
+    data class PathIds(
+            var storeId: UUID?,
+            var itemId: UUID?,
+            var reviewId: UUID?
+    )
 }
