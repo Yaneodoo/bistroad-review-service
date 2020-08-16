@@ -1,5 +1,6 @@
 package kr.bistroad.reviewservice.review
 
+import org.springframework.security.access.prepost.PreAuthorize
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import kr.bistroad.reviewservice.exception.ReviewNotFoundException
@@ -7,6 +8,7 @@ import org.springframework.data.domain.Pageable
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import java.io.Serializable
 import java.util.*
 
 @RestController
@@ -31,6 +33,7 @@ class ReviewController(
     ) = reviewService.searchReviews(storeId, itemId, dto, pageable)
 
     @PostMapping("/stores/{storeId}/items/{itemId}/reviews")
+    @PreAuthorize("isAuthenticated() and (( #dto.writerId == principal.userId ) or hasRole('ROLE_ADMIN'))")
     @ApiOperation("\${swagger.doc.operation.review.post-review.description}")
     @ResponseStatus(HttpStatus.CREATED)
     fun postReview(
@@ -40,6 +43,7 @@ class ReviewController(
     ) = reviewService.createReview(storeId, itemId, dto)
 
     @PatchMapping("/stores/{storeId}/items/{itemId}/reviews/{reviewId}")
+    @PreAuthorize("isAuthenticated() and (( hasPermission(#pathIds, 'Review', 'write') ) or hasRole('ROLE_ADMIN'))")
     @ApiOperation("\${swagger.doc.operation.review.patch-review.description}")
     fun patchReview(
         pathIds: PathIds,
@@ -47,6 +51,7 @@ class ReviewController(
     ) = reviewService.patchReview(pathIds.storeId!!, pathIds.itemId!!, pathIds.reviewId!!, dto)
 
     @DeleteMapping("/stores/{storeId}/items/{itemId}/reviews/{reviewId}")
+    @PreAuthorize("isAuthenticated() and (( hasPermission(#pathIds, 'Review', 'write') ) or hasRole('ROLE_ADMIN'))")
     @ApiOperation("\${swagger.doc.operation.review.delete-review.description}")
     fun deleteReview(
         pathIds: PathIds
@@ -60,5 +65,5 @@ class ReviewController(
         var storeId: UUID?,
         var itemId: UUID?,
         var reviewId: UUID?
-    )
+    ) : Serializable
 }
