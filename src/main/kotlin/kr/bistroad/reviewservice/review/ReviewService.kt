@@ -5,16 +5,16 @@ import java.util.*
 
 @Service
 class ReviewService(
-        private val reviewRepository: ReviewRepository
+    private val reviewRepository: ReviewRepository
 ) {
     fun createReview(storeId: UUID, itemId: UUID, dto: ReviewDto.CreateReq): ReviewDto.CruRes {
         val review = Review(
-                storeId = storeId,
-                itemId = itemId,
-                writerId = dto.writerId,
-                orderId = dto.orderId,
-                contents = dto.contents,
-                stars = dto.stars
+            storeId = storeId,
+            itemId = itemId,
+            writerId = dto.writerId,
+            orderId = dto.orderId,
+            contents = dto.contents,
+            stars = dto.stars
         )
         reviewRepository.save(review)
         return ReviewDto.CruRes.fromEntity(review)
@@ -27,7 +27,7 @@ class ReviewService(
 
     fun searchReviews(storeId: UUID, itemId: UUID): List<ReviewDto.CruRes> {
         return reviewRepository.findAllByStoreIdAndItemId(storeId, itemId)
-                .map(ReviewDto.CruRes.Companion::fromEntity)
+            .map(ReviewDto.CruRes.Companion::fromEntity)
     }
 
     fun patchReview(storeId: UUID, itemId: UUID, id: UUID, dto: ReviewDto.PatchReq): ReviewDto.CruRes {
