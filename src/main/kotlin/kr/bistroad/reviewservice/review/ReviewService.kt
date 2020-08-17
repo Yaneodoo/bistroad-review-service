@@ -25,9 +25,13 @@ class ReviewService(
         return ReviewDto.CruRes.fromEntity(review)
     }
 
-    fun searchReviews(storeId: UUID, itemId: UUID): List<ReviewDto.CruRes> {
-        return reviewRepository.findAllByStoreIdAndItemId(storeId, itemId)
-            .map(ReviewDto.CruRes.Companion::fromEntity)
+    fun searchReviews(storeId: UUID, itemId: UUID, dto: ReviewDto.SearchReq): List<ReviewDto.CruRes> {
+        val reviews = when {
+            dto.writerId != null -> reviewRepository.findAllByStoreIdAndItemIdAndWriterId(storeId, itemId, dto.writerId)
+            dto.orderId != null -> reviewRepository.findAllByStoreIdAndItemIdAndOrderId(storeId, itemId, dto.orderId)
+            else -> reviewRepository.findAllByStoreIdAndItemId(storeId, itemId)
+        }
+        return reviews.map(ReviewDto.CruRes.Companion::fromEntity)
     }
 
     fun patchReview(storeId: UUID, itemId: UUID, id: UUID, dto: ReviewDto.PatchReq): ReviewDto.CruRes {

@@ -17,8 +17,9 @@ class ReviewController(
     @GetMapping("/stores/{storeId}/items/{itemId}/reviews")
     fun getReviews(
         @PathVariable storeId: UUID,
-        @PathVariable itemId: UUID
-    ) = reviewService.searchReviews(storeId, itemId)
+        @PathVariable itemId: UUID,
+        dto: ReviewDto.SearchReq
+    ) = reviewService.searchReviews(storeId, itemId, dto)
 
     @PostMapping("/stores/{storeId}/items/{itemId}/reviews")
     @ResponseStatus(HttpStatus.CREATED)

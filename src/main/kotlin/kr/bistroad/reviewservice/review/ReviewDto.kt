@@ -10,6 +10,11 @@ interface ReviewDto {
         val stars: Int
     )
 
+    data class SearchReq(
+        val writerId: UUID?,
+        val orderId: UUID?
+    )
+
     data class PatchReq(
         val contents: String?,
         val stars: Int?
