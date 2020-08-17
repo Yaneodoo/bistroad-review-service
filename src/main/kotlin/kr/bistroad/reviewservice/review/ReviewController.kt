@@ -1,5 +1,6 @@
 package kr.bistroad.reviewservice.review
 
+import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 import java.util.*
 
@@ -19,6 +20,7 @@ class ReviewController(
     ) = reviewService.searchReviews(storeId, itemId)
 
     @PostMapping("/stores/{storeId}/items/{itemId}/reviews")
+    @ResponseStatus(HttpStatus.CREATED)
     fun postReview(
         @PathVariable storeId: UUID,
         @PathVariable itemId: UUID,
