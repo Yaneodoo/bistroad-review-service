@@ -1,6 +1,7 @@
 package kr.bistroad.reviewservice.review
 
 import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.util.*
 
@@ -36,7 +37,11 @@ class ReviewController(
     @DeleteMapping("/stores/{storeId}/items/{itemId}/reviews/{reviewId}")
     fun deleteReview(
         pathIds: PathIds
-    ) = reviewService.deleteReview(pathIds.storeId!!, pathIds.itemId!!, pathIds.reviewId!!)
+    ): ResponseEntity<Void> =
+        if (reviewService.deleteReview(pathIds.storeId!!, pathIds.itemId!!, pathIds.reviewId!!))
+            ResponseEntity.noContent().build()
+        else
+            ResponseEntity.notFound().build()
 
     data class PathIds(
         var storeId: UUID?,
