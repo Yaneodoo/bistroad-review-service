@@ -1,5 +1,6 @@
 package kr.bistroad.reviewservice.review
 
+import kr.bistroad.reviewservice.exception.ReviewNotFoundException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -13,6 +14,7 @@ class ReviewController(
     fun getReview(
         pathIds: PathIds
     ) = reviewService.readReview(pathIds.storeId!!, pathIds.itemId!!, pathIds.reviewId!!)
+        ?: throw ReviewNotFoundException()
 
     @GetMapping("/stores/{storeId}/items/{itemId}/reviews")
     fun getReviews(

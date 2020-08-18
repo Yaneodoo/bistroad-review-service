@@ -1,5 +1,6 @@
 package kr.bistroad.reviewservice.review
 
+import kr.bistroad.reviewservice.exception.ReviewNotFoundException
 import org.springframework.stereotype.Service
 import java.util.*
 
@@ -35,7 +36,7 @@ class ReviewService(
     }
 
     fun patchReview(storeId: UUID, itemId: UUID, id: UUID, dto: ReviewDto.PatchReq): ReviewDto.CruRes {
-        val review = reviewRepository.findByStoreIdAndItemIdAndId(storeId, itemId, id) ?: error("Review not found")
+        val review = reviewRepository.findByStoreIdAndItemIdAndId(storeId, itemId, id) ?: throw ReviewNotFoundException()
 
         if (dto.contents != null) review.contents = dto.contents
         if (dto.stars != null) review.stars = dto.stars
