@@ -1,6 +1,7 @@
 package kr.bistroad.reviewservice.review
 
 import kr.bistroad.reviewservice.exception.ReviewNotFoundException
+import org.springframework.data.domain.Pageable
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -20,8 +21,9 @@ class ReviewController(
     fun getReviews(
         @PathVariable storeId: UUID,
         @PathVariable itemId: UUID,
-        dto: ReviewDto.SearchReq
-    ) = reviewService.searchReviews(storeId, itemId, dto)
+        dto: ReviewDto.SearchReq,
+        pageable: Pageable
+    ) = reviewService.searchReviews(storeId, itemId, dto, pageable)
 
     @PostMapping("/stores/{storeId}/items/{itemId}/reviews")
     @ResponseStatus(HttpStatus.CREATED)
