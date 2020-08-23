@@ -2,6 +2,7 @@ package kr.bistroad.reviewservice.review
 
 import org.springframework.security.access.prepost.PreAuthorize
 import io.swagger.annotations.Api
+import io.swagger.annotations.ApiImplicitParam
 import io.swagger.annotations.ApiOperation
 import kr.bistroad.reviewservice.exception.ReviewNotFoundException
 import org.springframework.data.domain.Pageable
@@ -33,8 +34,12 @@ class ReviewController(
     ) = reviewService.searchReviews(storeId, itemId, dto, pageable)
 
     @PostMapping("/stores/{storeId}/items/{itemId}/reviews")
-    @PreAuthorize("isAuthenticated() and (( #dto.writerId == principal.userId ) or hasRole('ROLE_ADMIN'))")
     @ApiOperation("\${swagger.doc.operation.review.post-review.description}")
+    @ApiImplicitParam(
+        name = "Authorization", value = "Access Token", required = true, paramType = "header",
+        allowEmptyValue = false, dataTypeClass = String::class, example = "Bearer access_token"
+    )
+    @PreAuthorize("isAuthenticated() and (( #dto.writerId == principal.userId ) or hasRole('ROLE_ADMIN'))")
     @ResponseStatus(HttpStatus.CREATED)
     fun postReview(
         @PathVariable storeId: UUID,
@@ -43,16 +48,24 @@ class ReviewController(
     ) = reviewService.createReview(storeId, itemId, dto)
 
     @PatchMapping("/stores/{storeId}/items/{itemId}/reviews/{reviewId}")
-    @PreAuthorize("isAuthenticated() and (( hasPermission(#pathIds, 'Review', 'write') ) or hasRole('ROLE_ADMIN'))")
     @ApiOperation("\${swagger.doc.operation.review.patch-review.description}")
+    @ApiImplicitParam(
+        name = "Authorization", value = "Access Token", required = true, paramType = "header",
+        allowEmptyValue = false, dataTypeClass = String::class, example = "Bearer access_token"
+    )
+    @PreAuthorize("isAuthenticated() and (( hasPermission(#pathIds, 'Review', 'write') ) or hasRole('ROLE_ADMIN'))")
     fun patchReview(
         pathIds: PathIds,
         @RequestBody dto: ReviewDto.PatchReq
     ) = reviewService.patchReview(pathIds.storeId!!, pathIds.itemId!!, pathIds.reviewId!!, dto)
 
     @DeleteMapping("/stores/{storeId}/items/{itemId}/reviews/{reviewId}")
-    @PreAuthorize("isAuthenticated() and (( hasPermission(#pathIds, 'Review', 'write') ) or hasRole('ROLE_ADMIN'))")
     @ApiOperation("\${swagger.doc.operation.review.delete-review.description}")
+    @ApiImplicitParam(
+        name = "Authorization", value = "Access Token", required = true, paramType = "header",
+        allowEmptyValue = false, dataTypeClass = String::class, example = "Bearer access_token"
+    )
+    @PreAuthorize("isAuthenticated() and (( hasPermission(#pathIds, 'Review', 'write') ) or hasRole('ROLE_ADMIN'))")
     fun deleteReview(
         pathIds: PathIds
     ): ResponseEntity<Void> =
