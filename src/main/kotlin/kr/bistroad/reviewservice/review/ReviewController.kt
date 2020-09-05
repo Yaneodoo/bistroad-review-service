@@ -35,10 +35,6 @@ class ReviewController(
 
     @PostMapping("/stores/{storeId}/items/{itemId}/reviews")
     @ApiOperation("\${swagger.doc.operation.review.post-review.description}")
-    @ApiImplicitParam(
-        name = "Authorization", value = "Access Token", required = true, paramType = "header",
-        allowEmptyValue = false, dataTypeClass = String::class, example = "Bearer access_token"
-    )
     @PreAuthorize("isAuthenticated() and (( #dto.writerId == principal.userId ) or hasRole('ROLE_ADMIN'))")
     @ResponseStatus(HttpStatus.CREATED)
     fun postReview(
@@ -49,10 +45,6 @@ class ReviewController(
 
     @PatchMapping("/stores/{storeId}/items/{itemId}/reviews/{reviewId}")
     @ApiOperation("\${swagger.doc.operation.review.patch-review.description}")
-    @ApiImplicitParam(
-        name = "Authorization", value = "Access Token", required = true, paramType = "header",
-        allowEmptyValue = false, dataTypeClass = String::class, example = "Bearer access_token"
-    )
     @PreAuthorize("isAuthenticated() and (( hasPermission(#pathIds, 'Review', 'write') ) or hasRole('ROLE_ADMIN'))")
     fun patchReview(
         pathIds: PathIds,
@@ -61,10 +53,6 @@ class ReviewController(
 
     @DeleteMapping("/stores/{storeId}/items/{itemId}/reviews/{reviewId}")
     @ApiOperation("\${swagger.doc.operation.review.delete-review.description}")
-    @ApiImplicitParam(
-        name = "Authorization", value = "Access Token", required = true, paramType = "header",
-        allowEmptyValue = false, dataTypeClass = String::class, example = "Bearer access_token"
-    )
     @PreAuthorize("isAuthenticated() and (( hasPermission(#pathIds, 'Review', 'write') ) or hasRole('ROLE_ADMIN'))")
     fun deleteReview(
         pathIds: PathIds
