@@ -1,7 +1,9 @@
-package kr.bistroad.reviewservice.review
+package kr.bistroad.reviewservice.review.infrastructure
 
 import com.querydsl.core.BooleanBuilder
-import kr.bistroad.reviewservice.review.QReview.review
+import kr.bistroad.reviewservice.review.domain.QReview.review
+import kr.bistroad.reviewservice.review.application.ReviewDto
+import kr.bistroad.reviewservice.review.domain.Review
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable

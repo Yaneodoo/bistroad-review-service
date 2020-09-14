@@ -1,6 +1,8 @@
-package kr.bistroad.reviewservice.review
+package kr.bistroad.reviewservice.review.application
 
-import kr.bistroad.reviewservice.exception.ReviewNotFoundException
+import kr.bistroad.reviewservice.global.error.exception.ReviewNotFoundException
+import kr.bistroad.reviewservice.review.domain.Review
+import kr.bistroad.reviewservice.review.infrastructure.ReviewRepository
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import java.util.*

@@ -1,4 +1,4 @@
-package kr.bistroad.reviewservice
+package kr.bistroad.reviewservice.global.config.swagger
 
 import io.swagger.models.Swagger
 import org.springframework.core.annotation.Order

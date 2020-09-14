@@ -1,4 +1,4 @@
-package kr.bistroad.reviewservice.security
+package kr.bistroad.reviewservice.global.config.security
 
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken

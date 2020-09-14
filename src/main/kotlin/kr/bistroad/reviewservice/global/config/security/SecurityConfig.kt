@@ -1,6 +1,5 @@
-package kr.bistroad.reviewservice.security
+package kr.bistroad.reviewservice.global.config.security
 
-import kr.bistroad.reviewservice.review.ReviewPermissionEvaluator
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity

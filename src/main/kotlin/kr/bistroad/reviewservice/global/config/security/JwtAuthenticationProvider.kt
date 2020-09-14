@@ -1,4 +1,4 @@
-package kr.bistroad.reviewservice.security
+package kr.bistroad.reviewservice.global.config.security
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule

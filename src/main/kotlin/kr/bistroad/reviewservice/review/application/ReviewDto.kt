@@ -1,5 +1,6 @@
-package kr.bistroad.reviewservice.review
+package kr.bistroad.reviewservice.review.application
 
+import kr.bistroad.reviewservice.review.domain.Review
 import java.util.*
 
 interface ReviewDto {

@@ -1,13 +1,14 @@
-package kr.bistroad.reviewservice.review
+package kr.bistroad.reviewservice.review.presentation
 
-import org.springframework.security.access.prepost.PreAuthorize
 import io.swagger.annotations.Api
-import io.swagger.annotations.ApiImplicitParam
 import io.swagger.annotations.ApiOperation
-import kr.bistroad.reviewservice.exception.ReviewNotFoundException
+import kr.bistroad.reviewservice.global.error.exception.ReviewNotFoundException
+import kr.bistroad.reviewservice.review.application.ReviewDto
+import kr.bistroad.reviewservice.review.application.ReviewService
 import org.springframework.data.domain.Pageable
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 import java.io.Serializable
 import java.util.*

@@ -1,6 +1,7 @@
-package kr.bistroad.reviewservice.review
+package kr.bistroad.reviewservice.global.config.security
 
-import kr.bistroad.reviewservice.security.UserPrincipal
+import kr.bistroad.reviewservice.review.application.ReviewService
+import kr.bistroad.reviewservice.review.presentation.ReviewController
 import org.springframework.security.access.PermissionEvaluator
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Component

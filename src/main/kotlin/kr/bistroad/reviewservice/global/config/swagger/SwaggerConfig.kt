@@ -1,4 +1,4 @@
-package kr.bistroad.reviewservice
+package kr.bistroad.reviewservice.global.config.swagger
 
 import com.fasterxml.classmate.TypeResolver
 import io.swagger.annotations.ApiModelProperty

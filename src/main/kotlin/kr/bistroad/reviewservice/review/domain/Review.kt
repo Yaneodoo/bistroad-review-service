@@ -1,4 +1,4 @@
-package kr.bistroad.reviewservice.review
+package kr.bistroad.reviewservice.review.domain
 
 import org.hibernate.annotations.GenericGenerator
 import java.util.*

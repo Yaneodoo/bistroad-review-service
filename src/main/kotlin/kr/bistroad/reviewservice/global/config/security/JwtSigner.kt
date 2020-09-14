@@ -1,4 +1,4 @@
-package kr.bistroad.reviewservice.security
+package kr.bistroad.reviewservice.global.config.security
 
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jws
