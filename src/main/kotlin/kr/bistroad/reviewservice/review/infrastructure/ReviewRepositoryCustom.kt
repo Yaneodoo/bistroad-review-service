@@ -7,5 +7,5 @@ import org.springframework.data.domain.Pageable
 import java.util.*
 
 interface ReviewRepositoryCustom {
-    fun search(storeId: UUID, itemId: UUID, dto: ReviewDto.SearchReq, pageable: Pageable): Page<Review>
+    fun search(dto: ReviewDto.SearchReq, pageable: Pageable): Page<Review>
 }

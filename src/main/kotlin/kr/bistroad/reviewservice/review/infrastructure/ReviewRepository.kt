@@ -6,8 +6,6 @@ import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
 interface ReviewRepository : JpaRepository<Review, UUID>, ReviewRepositoryCustom {
-    fun findByStoreIdAndItemIdAndId(storeId: UUID, itemId: UUID, id: UUID): Review?
-
     @Transactional
-    fun removeByStoreIdAndItemIdAndId(storeId: UUID, itemId: UUID, id: UUID): Long
+    fun removeById(id: UUID): Long
 }

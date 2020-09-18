@@ -13,10 +13,11 @@ import java.util.*
 
 @Component
 class ReviewRepositoryImpl : QuerydslRepositorySupport(Review::class.java), ReviewRepositoryCustom {
-    override fun search(storeId: UUID, itemId: UUID, dto: ReviewDto.SearchReq, pageable: Pageable): Page<Review> {
+    override fun search(dto: ReviewDto.SearchReq, pageable: Pageable): Page<Review> {
         val booleanBuilder = BooleanBuilder()
-            .and(review.storeId.eq(storeId))
-            .and(review.itemId.eq(itemId))
+
+        if (dto.storeId != null) booleanBuilder.and(review.storeId.eq(dto.storeId))
+        if (dto.itemId != null) booleanBuilder.and(review.itemId.eq(dto.itemId))
         if (dto.orderId != null) booleanBuilder.and(review.orderId.eq(dto.orderId))
         if (dto.writerId != null) booleanBuilder.and(review.writerId.eq(dto.writerId))
 

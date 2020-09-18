@@ -13,55 +13,45 @@ import org.springframework.web.bind.annotation.*
 import java.util.*
 
 @RestController
-@Api(tags = ["/stores/**/items/**/reviews"])
+@Api(tags = ["/reviews"])
 class ReviewController(
     private val reviewService: ReviewService
 ) {
-    @GetMapping("/stores/{storeId}/items/{itemId}/reviews/{reviewId}")
+    @GetMapping("/reviews/{id}")
     @ApiOperation("\${swagger.doc.operation.review.get-review.description}")
     fun getReview(
-        @PathVariable storeId: UUID,
-        @PathVariable itemId: UUID,
-        @PathVariable reviewId: UUID
-    ) = reviewService.readReview(storeId, itemId, reviewId)
+        @PathVariable id: UUID
+    ) = reviewService.readReview(id)
         ?: throw ReviewNotFoundException()
 
-    @GetMapping("/stores/{storeId}/items/{itemId}/reviews")
+    @GetMapping("/reviews")
     @ApiOperation("\${swagger.doc.operation.review.get-reviews.description}")
     fun getReviews(
-        @PathVariable storeId: UUID,
-        @PathVariable itemId: UUID,
         dto: ReviewDto.SearchReq,
         pageable: Pageable
-    ) = reviewService.searchReviews(storeId, itemId, dto, pageable)
+    ) = reviewService.searchReviews(dto, pageable)
 
-    @PostMapping("/stores/{storeId}/items/{itemId}/reviews")
+    @PostMapping("/reviews")
     @ApiOperation("\${swagger.doc.operation.review.post-review.description}")
     @PreAuthorize("isAuthenticated() and (( #dto.writerId == principal.userId ) or hasRole('ROLE_ADMIN'))")
     @ResponseStatus(HttpStatus.CREATED)
     fun postReview(
-        @PathVariable storeId: UUID,
-        @PathVariable itemId: UUID,
         @RequestBody dto: ReviewDto.CreateReq
-    ) = reviewService.createReview(storeId, itemId, dto)
+    ) = reviewService.createReview(dto)
 
-    @PatchMapping("/stores/{storeId}/items/{itemId}/reviews/{reviewId}")
+    @PatchMapping("/reviews/{id}")
     @ApiOperation("\${swagger.doc.operation.review.patch-review.description}")
     fun patchReview(
-        @PathVariable storeId: UUID,
-        @PathVariable itemId: UUID,
-        @PathVariable reviewId: UUID,
+        @PathVariable id: UUID,
         @RequestBody dto: ReviewDto.PatchReq
-    ) = reviewService.patchReview(storeId, itemId, reviewId, dto)
+    ) = reviewService.patchReview(id, dto)
 
-    @DeleteMapping("/stores/{storeId}/items/{itemId}/reviews/{reviewId}")
+    @DeleteMapping("/reviews/{id}")
     @ApiOperation("\${swagger.doc.operation.review.delete-review.description}")
     fun deleteReview(
-        @PathVariable storeId: UUID,
-        @PathVariable itemId: UUID,
-        @PathVariable reviewId: UUID
+        @PathVariable id: UUID
     ): ResponseEntity<Void> =
-        if (reviewService.deleteReview(storeId, itemId, reviewId))
+        if (reviewService.deleteReview(id))
             ResponseEntity.noContent().build()
         else
             ResponseEntity.notFound().build()
