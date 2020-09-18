@@ -1,9 +1,11 @@
 package kr.bistroad.reviewservice.review.application
 
+import kr.bistroad.reviewservice.global.config.security.UserPrincipal
 import kr.bistroad.reviewservice.global.error.exception.ReviewNotFoundException
 import kr.bistroad.reviewservice.review.domain.Review
 import kr.bistroad.reviewservice.review.infrastructure.ReviewRepository
 import org.springframework.data.domain.Pageable
+import org.springframework.security.access.AccessDeniedException
 import org.springframework.stereotype.Service
 import java.util.*
 
@@ -43,6 +45,9 @@ class ReviewService(
         val review =
             reviewRepository.findByStoreIdAndItemIdAndId(storeId, itemId, id) ?: throw ReviewNotFoundException()
 
+        val principal = UserPrincipal.ofCurrentContext()
+        if (principal.userId != review.writerId && !principal.isAdmin) throw AccessDeniedException("No permission")
+
         if (dto.contents != null) review.contents = dto.contents
         if (dto.stars != null) review.stars = dto.stars
 
@@ -51,6 +56,11 @@ class ReviewService(
     }
 
     fun deleteReview(storeId: UUID, itemId: UUID, id: UUID): Boolean {
+        val review =
+            reviewRepository.findByStoreIdAndItemIdAndId(storeId, itemId, id) ?: throw ReviewNotFoundException()
+        val principal = UserPrincipal.ofCurrentContext()
+        if (principal.userId != review.writerId && !principal.isAdmin) throw AccessDeniedException("No permission")
+
         val numDeleted = reviewRepository.removeByStoreIdAndItemIdAndId(storeId, itemId, id)
         return numDeleted > 0
     }

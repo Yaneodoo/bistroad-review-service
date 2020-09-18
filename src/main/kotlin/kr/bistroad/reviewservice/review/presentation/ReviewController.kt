@@ -10,7 +10,6 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
-import java.io.Serializable
 import java.util.*
 
 @RestController
@@ -21,8 +20,10 @@ class ReviewController(
     @GetMapping("/stores/{storeId}/items/{itemId}/reviews/{reviewId}")
     @ApiOperation("\${swagger.doc.operation.review.get-review.description}")
     fun getReview(
-        pathIds: PathIds
-    ) = reviewService.readReview(pathIds.storeId!!, pathIds.itemId!!, pathIds.reviewId!!)
+        @PathVariable storeId: UUID,
+        @PathVariable itemId: UUID,
+        @PathVariable reviewId: UUID
+    ) = reviewService.readReview(storeId, itemId, reviewId)
         ?: throw ReviewNotFoundException()
 
     @GetMapping("/stores/{storeId}/items/{itemId}/reviews")
@@ -46,26 +47,22 @@ class ReviewController(
 
     @PatchMapping("/stores/{storeId}/items/{itemId}/reviews/{reviewId}")
     @ApiOperation("\${swagger.doc.operation.review.patch-review.description}")
-    @PreAuthorize("isAuthenticated() and (( hasPermission(#pathIds, 'Review', 'write') ) or hasRole('ROLE_ADMIN'))")
     fun patchReview(
-        pathIds: PathIds,
+        @PathVariable storeId: UUID,
+        @PathVariable itemId: UUID,
+        @PathVariable reviewId: UUID,
         @RequestBody dto: ReviewDto.PatchReq
-    ) = reviewService.patchReview(pathIds.storeId!!, pathIds.itemId!!, pathIds.reviewId!!, dto)
+    ) = reviewService.patchReview(storeId, itemId, reviewId, dto)
 
     @DeleteMapping("/stores/{storeId}/items/{itemId}/reviews/{reviewId}")
     @ApiOperation("\${swagger.doc.operation.review.delete-review.description}")
-    @PreAuthorize("isAuthenticated() and (( hasPermission(#pathIds, 'Review', 'write') ) or hasRole('ROLE_ADMIN'))")
     fun deleteReview(
-        pathIds: PathIds
+        @PathVariable storeId: UUID,
+        @PathVariable itemId: UUID,
+        @PathVariable reviewId: UUID
     ): ResponseEntity<Void> =
-        if (reviewService.deleteReview(pathIds.storeId!!, pathIds.itemId!!, pathIds.reviewId!!))
+        if (reviewService.deleteReview(storeId, itemId, reviewId))
             ResponseEntity.noContent().build()
         else
             ResponseEntity.notFound().build()
-
-    data class PathIds(
-        var storeId: UUID?,
-        var itemId: UUID?,
-        var reviewId: UUID?
-    ) : Serializable
 }
