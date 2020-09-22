@@ -5,10 +5,10 @@ import java.util.*
 
 interface ReviewRequest {
     data class SearchParams(
-        val storeId: UUID?,
-        val itemId: UUID?,
-        val writerId: UUID?,
-        val orderId: UUID?
+        val storeId: UUID? = null,
+        val itemId: UUID? = null,
+        val writerId: UUID? = null,
+        val orderId: UUID? = null
     )
 
     data class PostBody(
@@ -30,8 +30,8 @@ interface ReviewRequest {
     }
 
     data class PatchBody(
-        val contents: String?,
-        val stars: Int?
+        val contents: String? = null,
+        val stars: Int? = null
     ) {
         fun toDtoForUpdate() = ReviewDto.ForUpdate(
             contents = contents,

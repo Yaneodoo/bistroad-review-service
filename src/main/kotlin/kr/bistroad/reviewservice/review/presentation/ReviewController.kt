@@ -33,7 +33,7 @@ class ReviewController(
 
     @PostMapping("/reviews")
     @ApiOperation("\${swagger.doc.operation.review.post-review.description}")
-    @PreAuthorize("isAuthenticated() and (( #dto.writerId == principal.userId ) or hasRole('ROLE_ADMIN'))")
+    @PreAuthorize("isAuthenticated() and ( hasRole('ROLE_ADMIN') or ( #dto.writerId == principal.userId ) )")
     @ResponseStatus(HttpStatus.CREATED)
     fun postReview(@RequestBody body: ReviewRequest.PostBody) =
         reviewService.createReview(body.toDtoForCreate())
@@ -45,6 +45,7 @@ class ReviewController(
 
     @DeleteMapping("/reviews/{id}")
     @ApiOperation("\${swagger.doc.operation.review.delete-review.description}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     fun deleteReview(@PathVariable id: UUID) {
         val deleted = reviewService.deleteReview(id)
         if (!deleted) throw ReviewNotFoundException()
