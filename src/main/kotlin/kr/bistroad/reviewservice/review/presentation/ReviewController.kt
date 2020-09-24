@@ -33,7 +33,7 @@ class ReviewController(
 
     @PostMapping("/reviews")
     @ApiOperation("\${swagger.doc.operation.review.post-review.description}")
-    @PreAuthorize("isAuthenticated() and ( hasRole('ROLE_ADMIN') or ( #dto.writerId == principal.userId ) )")
+    @PreAuthorize("isAuthenticated() and ( hasRole('ROLE_ADMIN') or ( #body.writerId == principal.userId ) )")
     @ResponseStatus(HttpStatus.CREATED)
     fun postReview(@RequestBody body: ReviewRequest.PostBody) =
         reviewService.createReview(body.toDtoForCreate())
