@@ -10,6 +10,7 @@ import kr.bistroad.reviewservice.review.application.ReviewDto
 import kr.bistroad.reviewservice.review.domain.Review
 import kr.bistroad.reviewservice.review.infrastructure.ReviewRepository
 import kr.bistroad.reviewservice.review.presentation.ReviewRequest
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
@@ -18,14 +19,12 @@ import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
-import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.client.getForObject
 import java.util.*
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@Transactional
 internal class ReviewIntegrationTests {
     @Autowired
     private lateinit var mockMvc: MockMvc
@@ -37,6 +36,9 @@ internal class ReviewIntegrationTests {
     private lateinit var restTemplate: RestTemplate
 
     private val objectMapper: ObjectMapper = ObjectMapper().registerKotlinModule()
+
+    @AfterEach
+    fun clear() = reviewRepository.deleteAll()
 
     @Test
     fun `Gets a review`() {

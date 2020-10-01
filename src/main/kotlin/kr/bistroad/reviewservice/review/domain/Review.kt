@@ -1,30 +1,18 @@
 package kr.bistroad.reviewservice.review.domain
 
-import org.hibernate.annotations.GenericGenerator
+import org.springframework.data.annotation.Id
+import org.springframework.data.mongodb.core.mapping.Document
 import java.util.*
-import javax.persistence.*
 
-@Entity
-@Table(name = "reviews")
-class Review(
+@Document("reviews")
+data class Review(
     @Id
-    @GeneratedValue(generator = "uuid2")
-    @GenericGenerator(name = "uuid2", strategy = "uuid2")
-    @Column(columnDefinition = "BINARY(16)")
-    val id: UUID? = null,
+    val id: UUID = UUID.randomUUID(),
 
-    @Column(columnDefinition = "BINARY(16)")
     val storeId: UUID,
-
-    @Column(columnDefinition = "BINARY(16)")
     val itemId: UUID,
-
-    @Column(columnDefinition = "BINARY(16)")
     var writerId: UUID,
-
-    @Column(columnDefinition = "BINARY(16)")
     var orderId: UUID,
-
     var contents: String,
     var stars: Int
 )

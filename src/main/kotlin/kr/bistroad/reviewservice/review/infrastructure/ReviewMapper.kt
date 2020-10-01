@@ -14,7 +14,7 @@ class ReviewMapper(
     private val restTemplate: RestTemplate
 ) {
     fun mapToDtoForResult(review: Review) = ReviewDto.ForResult(
-        id = review.id!!,
+        id = review.id,
         storeId = review.storeId,
         itemId = review.itemId,
         writer = fetchWriter(review.writerId),

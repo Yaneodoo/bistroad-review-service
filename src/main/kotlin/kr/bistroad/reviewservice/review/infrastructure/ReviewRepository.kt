@@ -1,11 +1,9 @@
 package kr.bistroad.reviewservice.review.infrastructure
 
 import kr.bistroad.reviewservice.review.domain.Review
-import org.springframework.data.jpa.repository.JpaRepository
-import org.springframework.transaction.annotation.Transactional
+import org.springframework.data.mongodb.repository.MongoRepository
 import java.util.*
 
-interface ReviewRepository : JpaRepository<Review, UUID>, ReviewRepositoryCustom {
-    @Transactional
+interface ReviewRepository : MongoRepository<Review, UUID>, ReviewRepositoryCustom {
     fun removeById(id: UUID): Long
 }
