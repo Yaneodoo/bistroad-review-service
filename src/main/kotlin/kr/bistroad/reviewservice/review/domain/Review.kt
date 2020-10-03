@@ -14,5 +14,6 @@ data class Review(
     val item: ReviewedItem,
     val writer: Writer,
     var contents: String,
-    var stars: Int
+    var stars: Int,
+    var photoUri: String? = null
 )

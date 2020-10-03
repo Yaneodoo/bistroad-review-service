@@ -26,7 +26,8 @@ interface ReviewDto {
         val writer: Writer,
         val orderId: UUID,
         val contents: String,
-        val stars: Int
+        val stars: Int,
+        val photoUri: String?
     ) : ReviewDto {
         data class Writer(
             val id: UUID,

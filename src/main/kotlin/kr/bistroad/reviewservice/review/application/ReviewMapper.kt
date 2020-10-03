@@ -19,7 +19,8 @@ class ReviewMapper(
         writer = fetchWriter(review.writer.id),
         orderId = review.order.id,
         contents = review.contents,
-        stars = review.stars
+        stars = review.stars,
+        photoUri = review.photoUri
     )
 
     private fun fetchWriter(writerId: UUID) =
