@@ -9,10 +9,10 @@ data class Review(
     @Id
     val id: UUID = UUID.randomUUID(),
 
-    val storeId: UUID,
-    val itemId: UUID,
-    var writerId: UUID,
-    var orderId: UUID,
+    val store: Store,
+    val order: Order,
+    val item: ReviewedItem,
+    val writer: Writer,
     var contents: String,
     var stars: Int
 )

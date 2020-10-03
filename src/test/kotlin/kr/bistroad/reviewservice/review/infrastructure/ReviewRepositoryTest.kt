@@ -4,7 +4,7 @@ import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
-import kr.bistroad.reviewservice.review.domain.Review
+import kr.bistroad.reviewservice.review.domain.*
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -23,10 +23,10 @@ internal class ReviewRepositoryTest {
     @Test
     fun `Saves a review`() {
         val review = Review(
-            storeId = UUID.randomUUID(),
-            itemId = UUID.randomUUID(),
-            writerId = UUID.randomUUID(),
-            orderId = UUID.randomUUID(),
+            store = Store(UUID.randomUUID()),
+            item = ReviewedItem(UUID.randomUUID(), "", 0.0),
+            writer = Writer(UUID.randomUUID()),
+            order = Order(UUID.randomUUID()),
             contents = "What a nice dish",
             stars = 5
         )
@@ -41,10 +41,10 @@ internal class ReviewRepositoryTest {
     @Test
     fun `Deletes a review`() {
         val review = Review(
-            storeId = UUID.randomUUID(),
-            itemId = UUID.randomUUID(),
-            writerId = UUID.randomUUID(),
-            orderId = UUID.randomUUID(),
+            store = Store(UUID.randomUUID()),
+            item = ReviewedItem(UUID.randomUUID(), "", 0.0),
+            writer = Writer(UUID.randomUUID()),
+            order = Order(UUID.randomUUID()),
             contents = "What a nice dish",
             stars = 5
         )

@@ -7,7 +7,7 @@ import io.kotest.matchers.collections.shouldBeSingleton
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import kr.bistroad.reviewservice.review.application.ReviewDto
-import kr.bistroad.reviewservice.review.domain.Review
+import kr.bistroad.reviewservice.review.domain.*
 import kr.bistroad.reviewservice.review.infrastructure.ReviewRepository
 import kr.bistroad.reviewservice.review.presentation.ReviewRequest
 import org.junit.jupiter.api.AfterEach
@@ -43,19 +43,18 @@ internal class ReviewIntegrationTests {
     @Test
     fun `Gets a review`() {
         val review = Review(
-            storeId = UUID.randomUUID(),
-            itemId = UUID.randomUUID(),
-            writerId = UUID.randomUUID(),
-            orderId = UUID.randomUUID(),
+            store = Store(UUID.randomUUID()),
+            item = ReviewedItem(UUID.randomUUID(), "", 0.0),
+            writer = Writer(UUID.randomUUID()),
+            order = Order(UUID.randomUUID()),
             contents = "What a nice dish",
             stars = 5
         )
-
         reviewRepository.save(review)
 
         every {
             restTemplate.getForObject<ReviewDto.ForResult.Writer>(any<String>())
-        } returns ReviewDto.ForResult.Writer(id = review.writerId, username = "john", fullName = "John")
+        } returns ReviewDto.ForResult.Writer(id = review.writer.id, username = "john", fullName = "John")
 
         mockMvc.perform(
             get("/reviews/${review.id}")
@@ -63,7 +62,7 @@ internal class ReviewIntegrationTests {
         ).andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("\$.id").value(review.id.toString()))
-            .andExpect(jsonPath("\$.storeId").value(review.storeId.toString()))
+            .andExpect(jsonPath("\$.storeId").value(review.store.id.toString()))
             .andExpect(jsonPath("\$.contents").value(review.contents))
             .andExpect(jsonPath("\$.stars").value(review.stars))
     }
@@ -71,27 +70,29 @@ internal class ReviewIntegrationTests {
     @Test
     fun `Searches reviews`() {
         val writerId = UUID.randomUUID()
+        val store = Store(UUID.randomUUID())
+        val item = ReviewedItem(UUID.randomUUID(), "", 0.0)
         val reviewA = Review(
-            storeId = UUID.randomUUID(),
-            itemId = UUID.randomUUID(),
-            writerId = writerId,
-            orderId = UUID.randomUUID(),
+            store = store,
+            item = item,
+            writer = Writer(writerId),
+            order = Order(UUID.randomUUID()),
             contents = "Great :)",
             stars = 5
         )
         val reviewB = Review(
-            storeId = UUID.randomUUID(),
-            itemId = UUID.randomUUID(),
-            writerId = writerId,
-            orderId = UUID.randomUUID(),
+            store = store,
+            item = item,
+            writer = Writer(writerId),
+            order = Order(UUID.randomUUID()),
             contents = "Bad :(",
             stars = 1
         )
         val reviewC = Review(
-            storeId = UUID.randomUUID(),
-            itemId = UUID.randomUUID(),
-            writerId = writerId,
-            orderId = UUID.randomUUID(),
+            store = store,
+            item = item,
+            writer = Writer(writerId),
+            order = Order(UUID.randomUUID()),
             contents = "So so",
             stars = 2
         )
@@ -126,6 +127,9 @@ internal class ReviewIntegrationTests {
         )
 
         every {
+            restTemplate.getForObject<ReviewedItem>(any<String>())
+        } returns ReviewedItem(UUID.randomUUID(), "", 0.0)
+        every {
             restTemplate.getForObject<ReviewDto.ForResult.Writer>(any<String>())
         } returns ReviewDto.ForResult.Writer(id = body.writerId, username = "john", fullName = "John")
 
@@ -146,10 +150,10 @@ internal class ReviewIntegrationTests {
     @Test
     fun `Patches a review`() {
         val review = Review(
-            storeId = UUID.randomUUID(),
-            itemId = UUID.randomUUID(),
-            writerId = UUID.randomUUID(),
-            orderId = UUID.randomUUID(),
+            store = Store(UUID.randomUUID()),
+            item = ReviewedItem(UUID.randomUUID(), "", 0.0),
+            writer = Writer(UUID.randomUUID()),
+            order = Order(UUID.randomUUID()),
             contents = "What a nice dish",
             stars = 5
         )
@@ -159,7 +163,7 @@ internal class ReviewIntegrationTests {
 
         every {
             restTemplate.getForObject<ReviewDto.ForResult.Writer>(any<String>())
-        } returns ReviewDto.ForResult.Writer(id = review.writerId, username = "john", fullName = "John")
+        } returns ReviewDto.ForResult.Writer(id = review.writer.id, username = "john", fullName = "John")
 
         reviewRepository.save(review)
 
@@ -172,7 +176,7 @@ internal class ReviewIntegrationTests {
         ).andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("\$.id").exists())
-            .andExpect(jsonPath("\$.storeId").value(review.storeId.toString()))
+            .andExpect(jsonPath("\$.storeId").value(review.store.id.toString()))
             .andExpect(jsonPath("\$.contents").value(review.contents))
             .andExpect(jsonPath("\$.stars").value(4))
     }
@@ -180,18 +184,18 @@ internal class ReviewIntegrationTests {
     @Test
     fun `Deletes a review`() {
         val reviewA = Review(
-            storeId = UUID.randomUUID(),
-            itemId = UUID.randomUUID(),
-            writerId = UUID.randomUUID(),
-            orderId = UUID.randomUUID(),
+            store = Store(UUID.randomUUID()),
+            item = ReviewedItem(UUID.randomUUID(), "", 0.0),
+            writer = Writer(UUID.randomUUID()),
+            order = Order(UUID.randomUUID()),
             contents = "Great :)",
             stars = 5
         )
         val reviewB = Review(
-            storeId = UUID.randomUUID(),
-            itemId = UUID.randomUUID(),
-            writerId = UUID.randomUUID(),
-            orderId = UUID.randomUUID(),
+            store = Store(UUID.randomUUID()),
+            item = ReviewedItem(UUID.randomUUID(), "", 0.0),
+            writer = Writer(UUID.randomUUID()),
+            order = Order(UUID.randomUUID()),
             contents = "Bad :(",
             stars = 1
         )

@@ -6,8 +6,8 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.data.mongodb.core.find
+import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
-import org.springframework.data.mongodb.core.query.where
 import org.springframework.stereotype.Component
 import java.util.*
 
@@ -23,10 +23,10 @@ class ReviewRepositoryImpl(
     ): Page<Review> {
         val query = Query().with(pageable)
 
-        if (storeId != null) query.addCriteria(where(Review::storeId).`is`(storeId))
-        if (itemId != null) query.addCriteria(where(Review::itemId).`is`(itemId))
-        if (orderId != null) query.addCriteria(where(Review::orderId).`is`(orderId))
-        if (writerId != null) query.addCriteria(where(Review::writerId).`is`(writerId))
+        if (storeId != null) query.addCriteria(Criteria.where("store.id").`is`(storeId))
+        if (itemId != null) query.addCriteria(Criteria.where("item.id").`is`(itemId))
+        if (orderId != null) query.addCriteria(Criteria.where("order.id").`is`(orderId))
+        if (writerId != null) query.addCriteria(Criteria.where("writer.id").`is`(writerId))
 
         return mongoTemplate.find<Review>(query).toPage(pageable)
     }

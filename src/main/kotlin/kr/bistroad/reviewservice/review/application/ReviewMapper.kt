@@ -1,7 +1,6 @@
-package kr.bistroad.reviewservice.review.infrastructure
+package kr.bistroad.reviewservice.review.application
 
 import kr.bistroad.reviewservice.global.error.exception.WriterNotFoundException
-import kr.bistroad.reviewservice.review.application.ReviewDto
 import kr.bistroad.reviewservice.review.domain.Review
 import org.springframework.stereotype.Component
 import org.springframework.web.client.HttpClientErrorException
@@ -15,10 +14,10 @@ class ReviewMapper(
 ) {
     fun mapToDtoForResult(review: Review) = ReviewDto.ForResult(
         id = review.id,
-        storeId = review.storeId,
-        itemId = review.itemId,
-        writer = fetchWriter(review.writerId),
-        orderId = review.orderId,
+        storeId = review.store.id,
+        item = ReviewDto.ForResult.ReviewedItem(review.item),
+        writer = fetchWriter(review.writer.id),
+        orderId = review.order.id,
         contents = review.contents,
         stars = review.stars
     )
