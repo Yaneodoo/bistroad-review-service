@@ -49,7 +49,10 @@ internal class ReviewIntegrationTests {
             order = Order(UUID.randomUUID()),
             contents = "What a nice dish",
             stars = 5,
-            photoUri = "https://httpbin.org"
+            photo = Photo(
+                sourceUrl = "https://httpbin.org",
+                thumbnailUrl = "https://httpbin.org"
+            )
         )
         reviewRepository.save(review)
 
@@ -66,7 +69,7 @@ internal class ReviewIntegrationTests {
             .andExpect(jsonPath("\$.storeId").value(review.store.id.toString()))
             .andExpect(jsonPath("\$.contents").value(review.contents))
             .andExpect(jsonPath("\$.stars").value(review.stars))
-            .andExpect(jsonPath("\$.photoUri").value(review.photoUri!!))
+            .andExpect(jsonPath("\$.photo.sourceUrl").value(review.photo!!.sourceUrl))
     }
 
     @Test

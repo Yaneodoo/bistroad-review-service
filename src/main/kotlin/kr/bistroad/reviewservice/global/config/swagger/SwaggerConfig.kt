@@ -31,7 +31,10 @@ class SwaggerConfig(
         .apiInfo(
             ApiInfoBuilder().title("Review API").build()
         )
-        .tags(Tag("/reviews", "Review API"))
+        .tags(
+            Tag("/reviews", "Review API"),
+            Tag("/reviews/*/photo", "Review Photo API")
+        )
         .alternateTypeRules(
             newRule(
                 typeResolver.resolve(Pageable::class.java),

@@ -1,6 +1,7 @@
 package kr.bistroad.reviewservice.review.application
 
 import java.util.*
+import kr.bistroad.reviewservice.review.domain.Photo as DomainPhoto
 import kr.bistroad.reviewservice.review.domain.ReviewedItem as DomainReviewedItem
 
 interface ReviewDto {
@@ -27,7 +28,7 @@ interface ReviewDto {
         val orderId: UUID,
         val contents: String,
         val stars: Int,
-        val photoUri: String?
+        val photo: Photo?
     ) : ReviewDto {
         data class Writer(
             val id: UUID,
@@ -39,14 +40,21 @@ interface ReviewDto {
             val id: UUID,
             val name: String,
             val price: Double,
-            val photoUri: String? = null
+            val photo: Photo?
         ) {
             constructor(domain: DomainReviewedItem) : this(
                 id = domain.id,
                 name = domain.name,
                 price = domain.price,
-                photoUri = domain.photoUri
+                photo = domain.photo?.let(::Photo)
             )
+        }
+
+        data class Photo(
+            val sourceUrl: String,
+            val thumbnailUrl: String
+        ) {
+            constructor(domain: DomainPhoto): this(domain.sourceUrl, domain.thumbnailUrl)
         }
     }
 }

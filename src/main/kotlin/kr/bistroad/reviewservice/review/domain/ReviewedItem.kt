@@ -6,5 +6,5 @@ data class ReviewedItem(
     val id: UUID,
     val name: String,
     val price: Double,
-    val photoUri: String? = null
+    val photo: Photo? = null
 )

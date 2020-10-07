@@ -19,6 +19,8 @@ swagger:
           description: Update a review partially
         delete-review:
           description: Delete a review
+        post-review-photo:
+          description: Upload a review photo
     model:
       page:
         page:
