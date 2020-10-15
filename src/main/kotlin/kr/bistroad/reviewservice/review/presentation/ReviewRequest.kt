@@ -1,6 +1,10 @@
 package kr.bistroad.reviewservice.review.presentation
 
+import kr.bistroad.reviewservice.global.error.exception.InvalidDateFormatException
 import kr.bistroad.reviewservice.review.application.ReviewDto
+import java.time.OffsetDateTime
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
 import java.util.*
 
 interface ReviewRequest {
@@ -17,7 +21,8 @@ interface ReviewRequest {
         val writerId: UUID,
         val orderId: UUID,
         val contents: String,
-        val stars: Int
+        val stars: Int,
+        val timestamp: String? = null
     ) {
         fun toDtoForCreate() = ReviewDto.ForCreate(
             storeId = storeId,
@@ -25,7 +30,14 @@ interface ReviewRequest {
             writerId = writerId,
             orderId = orderId,
             contents = contents,
-            stars = stars
+            stars = stars,
+            timestamp = timestamp?.let {
+                try {
+                    OffsetDateTime.parse(it, DateTimeFormatter.ISO_DATE_TIME)
+                } catch (ex: DateTimeParseException) {
+                    throw InvalidDateFormatException(ex)
+                }
+            } ?: OffsetDateTime.now()
         )
     }
 

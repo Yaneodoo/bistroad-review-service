@@ -20,7 +20,8 @@ class ReviewMapper(
         orderId = review.order.id,
         contents = review.contents,
         stars = review.stars,
-        photo = review.photo?.let(ReviewDto.ForResult::Photo)
+        photo = review.photo?.let(ReviewDto.ForResult::Photo),
+        timestamp = review.timestamp
     )
 
     private fun fetchWriter(writerId: UUID) =

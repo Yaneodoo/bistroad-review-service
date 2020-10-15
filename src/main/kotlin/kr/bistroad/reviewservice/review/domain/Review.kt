@@ -2,6 +2,7 @@ package kr.bistroad.reviewservice.review.domain
 
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
+import java.time.OffsetDateTime
 import java.util.*
 
 @Document("reviews")
@@ -15,5 +16,6 @@ data class Review(
     val writer: Writer,
     var contents: String,
     var stars: Int,
-    var photo: Photo? = null
+    var photo: Photo? = null,
+    val timestamp: OffsetDateTime = OffsetDateTime.now()
 )

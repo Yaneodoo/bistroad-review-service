@@ -1,5 +1,6 @@
 package kr.bistroad.reviewservice.review.application
 
+import java.time.OffsetDateTime
 import java.util.*
 import kr.bistroad.reviewservice.review.domain.Photo as DomainPhoto
 import kr.bistroad.reviewservice.review.domain.ReviewedItem as DomainReviewedItem
@@ -12,7 +13,8 @@ interface ReviewDto {
         val writerId: UUID,
         val orderId: UUID,
         val contents: String,
-        val stars: Int
+        val stars: Int,
+        val timestamp: OffsetDateTime = OffsetDateTime.now()
     ) : ReviewDto
 
     data class ForUpdate(
@@ -28,7 +30,8 @@ interface ReviewDto {
         val orderId: UUID,
         val contents: String,
         val stars: Int,
-        val photo: Photo?
+        val photo: Photo?,
+        val timestamp: OffsetDateTime
     ) : ReviewDto {
         data class Writer(
             val id: UUID,

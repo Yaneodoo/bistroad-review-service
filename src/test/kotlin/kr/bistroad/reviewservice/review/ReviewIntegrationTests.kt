@@ -128,7 +128,8 @@ internal class ReviewIntegrationTests {
             writerId = UUID.randomUUID(),
             orderId = UUID.randomUUID(),
             contents = "What a nice dish",
-            stars = 5
+            stars = 5,
+            timestamp = "2020-09-22T11:31:19Z"
         )
 
         every {
@@ -150,6 +151,7 @@ internal class ReviewIntegrationTests {
             .andExpect(jsonPath("\$.storeId").value(body.storeId.toString()))
             .andExpect(jsonPath("\$.contents").value(body.contents))
             .andExpect(jsonPath("\$.stars").value(body.stars))
+            .andExpect(jsonPath("\$.timestamp").value(body.timestamp!!))
     }
 
     @Test

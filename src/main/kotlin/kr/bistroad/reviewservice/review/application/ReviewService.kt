@@ -25,7 +25,8 @@ class ReviewService(
             writer = Writer(dto.writerId),
             order = Order(dto.orderId),
             contents = dto.contents,
-            stars = dto.stars
+            stars = dto.stars,
+            timestamp = dto.timestamp
         )
         reviewRepository.save(review)
         return reviewMapper.mapToDtoForResult(review)
