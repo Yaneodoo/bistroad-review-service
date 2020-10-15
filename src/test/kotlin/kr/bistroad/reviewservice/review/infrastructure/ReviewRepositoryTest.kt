@@ -62,8 +62,6 @@ internal class ReviewRepositoryTest {
         id = UUID.randomUUID(),
         name = "random item",
         description = "a random item",
-        price = 0.0,
-        stars = 4.5,
-        orderCount = 100
+        price = 0.0
     )
 }

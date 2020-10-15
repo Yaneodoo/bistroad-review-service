@@ -42,14 +42,14 @@ interface ReviewDto {
         data class ReviewedItem(
             val id: UUID,
             val name: String,
-            val price: Double,
-            val photo: Photo?
+            val description: String,
+            val price: Double
         ) {
             constructor(domain: DomainReviewedItem) : this(
                 id = domain.id,
                 name = domain.name,
-                price = domain.price,
-                photo = domain.photo?.let(::Photo)
+                description = domain.description,
+                price = domain.price
             )
         }
 
