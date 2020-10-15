@@ -44,7 +44,7 @@ internal class ReviewIntegrationTests {
     fun `Gets a review`() {
         val review = Review(
             store = Store(UUID.randomUUID()),
-            item = ReviewedItem(UUID.randomUUID(), "", 0.0),
+            item = randomItem(),
             writer = Writer(UUID.randomUUID()),
             order = Order(UUID.randomUUID()),
             contents = "What a nice dish",
@@ -76,7 +76,7 @@ internal class ReviewIntegrationTests {
     fun `Searches reviews`() {
         val writerId = UUID.randomUUID()
         val store = Store(UUID.randomUUID())
-        val item = ReviewedItem(UUID.randomUUID(), "", 0.0)
+        val item = randomItem()
         val reviewA = Review(
             store = store,
             item = item,
@@ -134,7 +134,7 @@ internal class ReviewIntegrationTests {
 
         every {
             restTemplate.getForObject<ReviewedItem>(any<String>())
-        } returns ReviewedItem(UUID.randomUUID(), "", 0.0)
+        } returns randomItem()
         every {
             restTemplate.getForObject<ReviewDto.ForResult.Writer>(any<String>())
         } returns ReviewDto.ForResult.Writer(id = body.writerId, username = "john", fullName = "John")
@@ -158,7 +158,7 @@ internal class ReviewIntegrationTests {
     fun `Patches a review`() {
         val review = Review(
             store = Store(UUID.randomUUID()),
-            item = ReviewedItem(UUID.randomUUID(), "", 0.0),
+            item = randomItem(),
             writer = Writer(UUID.randomUUID()),
             order = Order(UUID.randomUUID()),
             contents = "What a nice dish",
@@ -192,7 +192,7 @@ internal class ReviewIntegrationTests {
     fun `Deletes a review`() {
         val reviewA = Review(
             store = Store(UUID.randomUUID()),
-            item = ReviewedItem(UUID.randomUUID(), "", 0.0),
+            item = randomItem(),
             writer = Writer(UUID.randomUUID()),
             order = Order(UUID.randomUUID()),
             contents = "Great :)",
@@ -200,7 +200,7 @@ internal class ReviewIntegrationTests {
         )
         val reviewB = Review(
             store = Store(UUID.randomUUID()),
-            item = ReviewedItem(UUID.randomUUID(), "", 0.0),
+            item = randomItem(),
             writer = Writer(UUID.randomUUID()),
             order = Order(UUID.randomUUID()),
             contents = "Bad :(",
@@ -221,4 +221,13 @@ internal class ReviewIntegrationTests {
         reviews.shouldBeSingleton()
         reviews.first().shouldBe(reviewB)
     }
+
+    private fun randomItem() = ReviewedItem(
+        id = UUID.randomUUID(),
+        name = "random item",
+        description = "a random item",
+        price = 0.0,
+        stars = 4.5,
+        orderCount = 100
+    )
 }

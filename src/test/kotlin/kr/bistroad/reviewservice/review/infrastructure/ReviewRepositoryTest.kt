@@ -24,7 +24,7 @@ internal class ReviewRepositoryTest {
     fun `Saves a review`() {
         val review = Review(
             store = Store(UUID.randomUUID()),
-            item = ReviewedItem(UUID.randomUUID(), "", 0.0),
+            item = randomItem(),
             writer = Writer(UUID.randomUUID()),
             order = Order(UUID.randomUUID()),
             contents = "What a nice dish",
@@ -42,7 +42,7 @@ internal class ReviewRepositoryTest {
     fun `Deletes a review`() {
         val review = Review(
             store = Store(UUID.randomUUID()),
-            item = ReviewedItem(UUID.randomUUID(), "", 0.0),
+            item = randomItem(),
             writer = Writer(UUID.randomUUID()),
             order = Order(UUID.randomUUID()),
             contents = "What a nice dish",
@@ -57,4 +57,13 @@ internal class ReviewRepositoryTest {
         reviewRepository.findByIdOrNull(reviewId).shouldBeNull()
         reviewRepository.findAll().shouldBeEmpty()
     }
+
+    private fun randomItem() = ReviewedItem(
+        id = UUID.randomUUID(),
+        name = "random item",
+        description = "a random item",
+        price = 0.0,
+        stars = 4.5,
+        orderCount = 100
+    )
 }
