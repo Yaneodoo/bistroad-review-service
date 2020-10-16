@@ -35,9 +35,10 @@ class ReviewPhotoService(
     @Autowired(required = false)
     private val storage: Storage? = null,
 
-    private val reviewRepository: ReviewRepository
+    private val reviewRepository: ReviewRepository,
+    private val reviewMapper: ReviewMapper
 ) {
-    fun upload(userId: UUID, file: MultipartFile) {
+    fun upload(userId: UUID, file: MultipartFile): ReviewDto.ForResult {
         require(file.contentType in ALLOWED_CONTENT_TYPES) { throw InvalidFileTypeException() }
         check(storage != null)
 
@@ -57,6 +58,8 @@ class ReviewPhotoService(
             thumbnailUrl = "$PUBLIC_URL/$bucketName/${thumbnailBlob.name}"
         )
         reviewRepository.save(review)
+
+        return reviewMapper.mapToDtoForResult(review)
     }
 
     private fun createBlobFrom(inputStream: InputStream, fileName: String) =
