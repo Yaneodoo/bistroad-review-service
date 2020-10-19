@@ -36,7 +36,8 @@ interface ReviewDto {
         data class Writer(
             val id: UUID,
             val username: String,
-            val fullName: String
+            val fullName: String,
+            val photo: Photo? = null
         )
 
         data class ReviewedItem(
