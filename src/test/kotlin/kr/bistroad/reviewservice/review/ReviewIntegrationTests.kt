@@ -145,6 +145,9 @@ internal class ReviewIntegrationTests {
             restTemplate.postForObject<StoreItem>(any<String>(), any())
         } returns storeItem
         every {
+            restTemplate.postForObject<Order>(any<String>(), any())
+        } returns Order(body.orderId)
+        every {
             restTemplate.getForObject<User>(any<String>())
         } returns User(id = body.writerId, username = "john", fullName = "John")
 
@@ -227,6 +230,9 @@ internal class ReviewIntegrationTests {
         every {
             restTemplate.postForObject<StoreItem>(any<String>(), any())
         } returns StoreItem(reviewA.item.id, "Example", "An example item", 100.0)
+        every {
+            restTemplate.postForObject<Order>(any<String>(), any())
+        } returns Order(reviewA.order.id)
 
         mockMvc.perform(
             delete("/reviews/${reviewA.id}")

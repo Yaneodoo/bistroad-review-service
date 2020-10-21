@@ -14,6 +14,7 @@ import java.util.*
 class ReviewService(
     private val reviewRepository: ReviewRepository,
     private val storeItemRepository: StoreItemRepository,
+    private val orderRepository: OrderRepository,
     private val reviewMapper: ReviewMapper
 ) {
     fun createReview(dto: ReviewDto.ForCreate): ReviewDto.ForResult {
@@ -29,6 +30,7 @@ class ReviewService(
         reviewRepository.save(review)
 
         storeItemRepository.addReviewStar(review.store.id, review.item.id, review)
+        orderRepository.addReview(review)
 
         return reviewMapper.mapToDtoForResult(review)
     }
@@ -74,6 +76,7 @@ class ReviewService(
         if (principal.userId != review.writer.id && !principal.isAdmin) throw AccessDeniedException("No permission")
 
         storeItemRepository.removeReviewStar(review.store.id, review.item.id, review)
+        orderRepository.removeReview(review)
 
         val numDeleted = reviewRepository.removeById(id)
         return numDeleted > 0
