@@ -20,6 +20,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.client.getForObject
+import org.springframework.web.client.postForObject
 import java.util.*
 
 @SpringBootTest
@@ -136,9 +137,13 @@ internal class ReviewIntegrationTests {
             timestamp = "2020-09-22T11:31:19Z"
         )
 
+        val storeItem = StoreItem(UUID.randomUUID(), "Example", "An example item", 100.0)
         every {
             restTemplate.getForObject<StoreItem>(any<String>())
-        } returns StoreItem(UUID.randomUUID(), "Example", "An example item", 100.0)
+        } returns storeItem
+        every {
+            restTemplate.postForObject<StoreItem>(any<String>(), any())
+        } returns storeItem
         every {
             restTemplate.getForObject<User>(any<String>())
         } returns User(id = body.writerId, username = "john", fullName = "John")
@@ -218,6 +223,10 @@ internal class ReviewIntegrationTests {
 
         reviewRepository.save(reviewA)
         reviewRepository.save(reviewB)
+
+        every {
+            restTemplate.postForObject<StoreItem>(any<String>(), any())
+        } returns StoreItem(reviewA.item.id, "Example", "An example item", 100.0)
 
         mockMvc.perform(
             delete("/reviews/${reviewA.id}")

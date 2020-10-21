@@ -13,6 +13,7 @@ import java.util.*
 @Service
 class ReviewService(
     private val reviewRepository: ReviewRepository,
+    private val storeItemRepository: StoreItemRepository,
     private val reviewMapper: ReviewMapper
 ) {
     fun createReview(dto: ReviewDto.ForCreate): ReviewDto.ForResult {
@@ -26,6 +27,9 @@ class ReviewService(
             timestamp = dto.timestamp
         )
         reviewRepository.save(review)
+
+        storeItemRepository.addReviewStar(review.store.id, review.item.id, review)
+
         return reviewMapper.mapToDtoForResult(review)
     }
 
@@ -68,6 +72,8 @@ class ReviewService(
         val review = reviewRepository.findByIdOrNull(id) ?: throw ReviewNotFoundException()
         val principal = UserPrincipal.ofCurrentContext()
         if (principal.userId != review.writer.id && !principal.isAdmin) throw AccessDeniedException("No permission")
+
+        storeItemRepository.removeReviewStar(review.store.id, review.item.id, review)
 
         val numDeleted = reviewRepository.removeById(id)
         return numDeleted > 0
