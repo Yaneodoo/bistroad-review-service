@@ -6,7 +6,6 @@ import com.ninjasquad.springmockk.MockkBean
 import io.kotest.matchers.collections.shouldBeSingleton
 import io.kotest.matchers.shouldBe
 import io.mockk.every
-import kr.bistroad.reviewservice.review.application.ReviewDto
 import kr.bistroad.reviewservice.review.domain.*
 import kr.bistroad.reviewservice.review.infrastructure.ReviewRepository
 import kr.bistroad.reviewservice.review.presentation.ReviewRequest
@@ -44,7 +43,7 @@ internal class ReviewIntegrationTests {
     fun `Gets a review`() {
         val review = Review(
             store = Store(UUID.randomUUID()),
-            item = randomItem(),
+            item = ReviewedItem(UUID.randomUUID()),
             writer = Writer(UUID.randomUUID()),
             order = Order(UUID.randomUUID()),
             contents = "What a nice dish",
@@ -57,8 +56,11 @@ internal class ReviewIntegrationTests {
         reviewRepository.save(review)
 
         every {
-            restTemplate.getForObject<ReviewDto.ForResult.Writer>(any<String>())
-        } returns ReviewDto.ForResult.Writer(id = review.writer.id, username = "john", fullName = "John")
+            restTemplate.getForObject<StoreItem>(any<String>())
+        } returns StoreItem(review.item.id, "Example", "An example item", 100.0)
+        every {
+            restTemplate.getForObject<User>(any<String>())
+        } returns User(id = review.writer.id, username = "john", fullName = "John")
 
         mockMvc.perform(
             get("/reviews/${review.id}")
@@ -76,7 +78,7 @@ internal class ReviewIntegrationTests {
     fun `Searches reviews`() {
         val writerId = UUID.randomUUID()
         val store = Store(UUID.randomUUID())
-        val item = randomItem()
+        val item = ReviewedItem(UUID.randomUUID())
         val reviewA = Review(
             store = store,
             item = item,
@@ -107,8 +109,11 @@ internal class ReviewIntegrationTests {
         reviewRepository.save(reviewC)
 
         every {
-            restTemplate.getForObject<ReviewDto.ForResult.Writer>(any<String>())
-        } returns ReviewDto.ForResult.Writer(id = writerId, username = "john", fullName = "John")
+            restTemplate.getForObject<StoreItem>(any<String>())
+        } returns StoreItem(item.id, "Example", "An example item", 100.0)
+        every {
+            restTemplate.getForObject<User>(any<String>())
+        } returns User(id = writerId, username = "john", fullName = "John")
 
         mockMvc.perform(
             get("/reviews?sort=stars,asc")
@@ -133,11 +138,11 @@ internal class ReviewIntegrationTests {
         )
 
         every {
-            restTemplate.getForObject<ReviewedItem>(any<String>())
-        } returns randomItem()
+            restTemplate.getForObject<StoreItem>(any<String>())
+        } returns StoreItem(UUID.randomUUID(), "Example", "An example item", 100.0)
         every {
-            restTemplate.getForObject<ReviewDto.ForResult.Writer>(any<String>())
-        } returns ReviewDto.ForResult.Writer(id = body.writerId, username = "john", fullName = "John")
+            restTemplate.getForObject<User>(any<String>())
+        } returns User(id = body.writerId, username = "john", fullName = "John")
 
         mockMvc.perform(
             post("/reviews")
@@ -158,7 +163,7 @@ internal class ReviewIntegrationTests {
     fun `Patches a review`() {
         val review = Review(
             store = Store(UUID.randomUUID()),
-            item = randomItem(),
+            item = ReviewedItem(UUID.randomUUID()),
             writer = Writer(UUID.randomUUID()),
             order = Order(UUID.randomUUID()),
             contents = "What a nice dish",
@@ -169,8 +174,11 @@ internal class ReviewIntegrationTests {
         )
 
         every {
-            restTemplate.getForObject<ReviewDto.ForResult.Writer>(any<String>())
-        } returns ReviewDto.ForResult.Writer(id = review.writer.id, username = "john", fullName = "John")
+            restTemplate.getForObject<StoreItem>(any<String>())
+        } returns StoreItem(review.item.id, "Example", "An example item", 100.0)
+        every {
+            restTemplate.getForObject<User>(any<String>())
+        } returns User(id = review.writer.id, username = "john", fullName = "John")
 
         reviewRepository.save(review)
 
@@ -192,7 +200,7 @@ internal class ReviewIntegrationTests {
     fun `Deletes a review`() {
         val reviewA = Review(
             store = Store(UUID.randomUUID()),
-            item = randomItem(),
+            item = ReviewedItem(UUID.randomUUID()),
             writer = Writer(UUID.randomUUID()),
             order = Order(UUID.randomUUID()),
             contents = "Great :)",
@@ -200,7 +208,7 @@ internal class ReviewIntegrationTests {
         )
         val reviewB = Review(
             store = Store(UUID.randomUUID()),
-            item = randomItem(),
+            item = ReviewedItem(UUID.randomUUID()),
             writer = Writer(UUID.randomUUID()),
             order = Order(UUID.randomUUID()),
             contents = "Bad :(",
@@ -221,11 +229,4 @@ internal class ReviewIntegrationTests {
         reviews.shouldBeSingleton()
         reviews.first().shouldBe(reviewB)
     }
-
-    private fun randomItem() = ReviewedItem(
-        id = UUID.randomUUID(),
-        name = "random item",
-        description = "a random item",
-        price = 0.0
-    )
 }

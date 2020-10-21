@@ -13,15 +13,12 @@ import java.util.*
 @Service
 class ReviewService(
     private val reviewRepository: ReviewRepository,
-    private val reviewedItemRepository: ReviewedItemRepository,
     private val reviewMapper: ReviewMapper
 ) {
     fun createReview(dto: ReviewDto.ForCreate): ReviewDto.ForResult {
-        val item = reviewedItemRepository.findById(dto.storeId, dto.itemId)
-            ?: throw ReviewNotFoundException()
         val review = Review(
             store = Store(dto.storeId),
-            item = item,
+            item = ReviewedItem(dto.itemId),
             writer = Writer(dto.writerId),
             order = Order(dto.orderId),
             contents = dto.contents,

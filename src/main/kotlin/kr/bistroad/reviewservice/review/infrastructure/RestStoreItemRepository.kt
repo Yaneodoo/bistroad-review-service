@@ -1,8 +1,7 @@
 package kr.bistroad.reviewservice.review.infrastructure
 
-import kr.bistroad.reviewservice.global.error.exception.WriterNotFoundException
-import kr.bistroad.reviewservice.review.domain.ReviewedItem
-import kr.bistroad.reviewservice.review.domain.ReviewedItemRepository
+import kr.bistroad.reviewservice.review.domain.StoreItem
+import kr.bistroad.reviewservice.review.domain.StoreItemRepository
 import org.springframework.stereotype.Component
 import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.RestTemplate
@@ -10,15 +9,15 @@ import org.springframework.web.client.getForObject
 import java.util.*
 
 @Component
-class RestReviewedItemRepository(
+class RestStoreItemRepository(
     private val restTemplate: RestTemplate
-) : ReviewedItemRepository {
+) : StoreItemRepository {
     override fun findById(storeId: UUID, itemId: UUID) =
         try {
-            restTemplate.getForObject<ReviewedItem>(
+            restTemplate.getForObject<StoreItem>(
                 "http://store-service:8080/stores/$storeId/items/$itemId"
             )
         } catch (ex: HttpClientErrorException.NotFound) {
-            throw WriterNotFoundException(ex)
+            null
         }
 }

@@ -1,35 +1,31 @@
 package kr.bistroad.reviewservice.review.application
 
-import kr.bistroad.reviewservice.global.error.exception.WriterNotFoundException
 import kr.bistroad.reviewservice.review.domain.Review
+import kr.bistroad.reviewservice.review.domain.StoreItemRepository
+import kr.bistroad.reviewservice.review.domain.UserRepository
 import org.springframework.stereotype.Component
-import org.springframework.web.client.HttpClientErrorException
-import org.springframework.web.client.RestTemplate
-import org.springframework.web.client.getForObject
-import java.util.*
 
 @Component
 class ReviewMapper(
-    private val restTemplate: RestTemplate
+    private val storeItemRepository: StoreItemRepository,
+    private val userRepository: UserRepository
 ) {
-    fun mapToDtoForResult(review: Review) = ReviewDto.ForResult(
-        id = review.id,
-        storeId = review.store.id,
-        item = ReviewDto.ForResult.ReviewedItem(review.item),
-        writer = fetchWriter(review.writer.id),
-        orderId = review.order.id,
-        contents = review.contents,
-        stars = review.stars,
-        photo = review.photo?.let(ReviewDto.ForResult::Photo),
-        timestamp = review.timestamp
-    )
+    fun mapToDtoForResult(review: Review): ReviewDto.ForResult {
+        val item = storeItemRepository.findById(review.store.id, review.item.id)
+            ?: throw IllegalStateException("Store item not found")
+        val user = userRepository.findById(review.writer.id)
+            ?: throw IllegalStateException("User not found")
 
-    private fun fetchWriter(writerId: UUID) =
-        try {
-            restTemplate.getForObject<ReviewDto.ForResult.Writer>(
-                "http://user-service:8080/users/$writerId"
-            )
-        } catch (ex: HttpClientErrorException.NotFound) {
-            throw WriterNotFoundException(ex)
-        }
+        return ReviewDto.ForResult(
+            id = review.id,
+            storeId = review.store.id,
+            item = ReviewDto.ForResult.StoreItem(item),
+            writer = ReviewDto.ForResult.User(user),
+            orderId = review.order.id,
+            contents = review.contents,
+            stars = review.stars,
+            photo = review.photo?.let(ReviewDto.ForResult::Photo),
+            timestamp = review.timestamp
+        )
+    }
 }
