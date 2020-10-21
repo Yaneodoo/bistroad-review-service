@@ -50,9 +50,9 @@ interface ReviewDto {
 
         data class StoreItem(
             val id: UUID,
-            val name: String,
-            val description: String,
-            val price: Double
+            val name: String? = null,
+            val description: String? = null,
+            val price: Double? = null
         ) {
             constructor(storeItem: DomainStoreItem) : this(
                 id = storeItem.id,

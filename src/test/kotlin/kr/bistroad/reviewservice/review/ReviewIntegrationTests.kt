@@ -57,18 +57,20 @@ internal class ReviewIntegrationTests {
 
         every {
             restTemplate.getForObject<StoreItem>(any<String>())
-        } returns StoreItem(review.item.id, "Example", "An example item", 100.0)
+        } returns StoreItem(review.item.id, "My store item", "An example item", 100.0)
         every {
             restTemplate.getForObject<User>(any<String>())
         } returns User(id = review.writer.id, username = "john", fullName = "John")
 
         mockMvc.perform(
             get("/reviews/${review.id}")
+                .param("fetch", "store-item")
                 .accept(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("\$.id").value(review.id.toString()))
             .andExpect(jsonPath("\$.storeId").value(review.store.id.toString()))
+            .andExpect(jsonPath("\$.item.name").value("My store item"))
             .andExpect(jsonPath("\$.contents").value(review.contents))
             .andExpect(jsonPath("\$.stars").value(review.stars))
             .andExpect(jsonPath("\$.photo.sourceUrl").value(review.photo!!.sourceUrl))
@@ -108,9 +110,6 @@ internal class ReviewIntegrationTests {
         reviewRepository.save(reviewB)
         reviewRepository.save(reviewC)
 
-        every {
-            restTemplate.getForObject<StoreItem>(any<String>())
-        } returns StoreItem(item.id, "Example", "An example item", 100.0)
         every {
             restTemplate.getForObject<User>(any<String>())
         } returns User(id = writerId, username = "john", fullName = "John")
@@ -154,6 +153,8 @@ internal class ReviewIntegrationTests {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("\$.id").exists())
             .andExpect(jsonPath("\$.storeId").value(body.storeId.toString()))
+            .andExpect(jsonPath("\$.item.id").exists())
+            .andExpect(jsonPath("\$.item.name").doesNotExist())
             .andExpect(jsonPath("\$.contents").value(body.contents))
             .andExpect(jsonPath("\$.stars").value(body.stars))
             .andExpect(jsonPath("\$.timestamp").value(body.timestamp!!))

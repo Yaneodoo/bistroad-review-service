@@ -12,7 +12,8 @@ interface ReviewRequest {
         val storeId: UUID? = null,
         val itemId: UUID? = null,
         val writerId: UUID? = null,
-        val orderId: UUID? = null
+        val orderId: UUID? = null,
+        val fetch: List<String>? = null
     )
 
     data class PostBody(

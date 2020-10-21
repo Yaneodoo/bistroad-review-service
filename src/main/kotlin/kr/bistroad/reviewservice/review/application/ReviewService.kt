@@ -29,9 +29,9 @@ class ReviewService(
         return reviewMapper.mapToDtoForResult(review)
     }
 
-    fun readReview(id: UUID): ReviewDto.ForResult? {
+    fun readReview(id: UUID, fetchList: List<FetchTarget> = emptyList()): ReviewDto.ForResult? {
         val review = reviewRepository.findByIdOrNull(id) ?: return null
-        return reviewMapper.mapToDtoForResult(review)
+        return reviewMapper.mapToDtoForResult(review, fetchList)
     }
 
     fun searchReviews(
@@ -39,7 +39,8 @@ class ReviewService(
         itemId: UUID?,
         writerId: UUID?,
         orderId: UUID?,
-        pageable: Pageable
+        pageable: Pageable,
+        fetchList: List<FetchTarget> = emptyList()
     ): List<ReviewDto.ForResult> =
         reviewRepository.search(
             storeId = storeId,
@@ -48,7 +49,7 @@ class ReviewService(
             orderId = orderId,
             pageable = pageable
         ).content
-            .map(reviewMapper::mapToDtoForResult)
+            .map { reviewMapper.mapToDtoForResult(it, fetchList) }
 
     fun patchReview(id: UUID, dto: ReviewDto.ForUpdate): ReviewDto.ForResult {
         val review = reviewRepository.findByIdOrNull(id) ?: throw ReviewNotFoundException()

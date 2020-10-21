@@ -3,6 +3,7 @@ package kr.bistroad.reviewservice.review.presentation
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import kr.bistroad.reviewservice.global.error.exception.ReviewNotFoundException
+import kr.bistroad.reviewservice.review.application.FetchTarget
 import kr.bistroad.reviewservice.review.application.ReviewService
 import org.springframework.data.domain.Pageable
 import org.springframework.http.HttpStatus
@@ -17,8 +18,11 @@ class ReviewController(
 ) {
     @GetMapping("/reviews/{id}")
     @ApiOperation("\${swagger.doc.operation.review.get-review.description}")
-    fun getReview(@PathVariable id: UUID) =
-        reviewService.readReview(id) ?: throw ReviewNotFoundException()
+    fun getReview(@PathVariable id: UUID, @RequestParam fetch: List<String>? = null) =
+        reviewService.readReview(
+            id = id,
+            fetchList = fetch?.map { FetchTarget.from(it) } ?: emptyList()
+        ) ?: throw ReviewNotFoundException()
 
     @GetMapping("/reviews")
     @ApiOperation("\${swagger.doc.operation.review.get-reviews.description}")
@@ -28,7 +32,8 @@ class ReviewController(
             itemId = params.itemId,
             writerId = params.writerId,
             orderId = params.orderId,
-            pageable = pageable
+            pageable = pageable,
+            fetchList = params.fetch?.map { FetchTarget.from(it) } ?: emptyList()
         )
 
     @PostMapping("/reviews")
