@@ -7,6 +7,7 @@ import kr.bistroad.reviewservice.review.domain.OrderRepository
 import kr.bistroad.reviewservice.review.domain.Review
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
+import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.client.postForObject
@@ -21,7 +22,10 @@ class RestOrderRepository(
     override fun addReview(review: Review) {
         val body = AddReviewBody(reviewId = review.id)
 
-        val headers = HttpHeaders().apply { this["Authorization-Role"] = "ROLE_ADMIN" }
+        val headers = HttpHeaders().apply {
+            this.contentType = MediaType.APPLICATION_JSON
+            this["Authorization-Role"] = "ROLE_ADMIN"
+        }
         val request = HttpEntity(objectMapper.writeValueAsString(body), headers)
 
         restTemplate.postForObject<Order>(
@@ -33,7 +37,10 @@ class RestOrderRepository(
     override fun removeReview(review: Review) {
         val body = RemoveReviewBody(reviewId = review.id)
 
-        val headers = HttpHeaders().apply { this["Authorization-Role"] = "ROLE_ADMIN" }
+        val headers = HttpHeaders().apply {
+            this.contentType = MediaType.APPLICATION_JSON
+            this["Authorization-Role"] = "ROLE_ADMIN"
+        }
         val request = HttpEntity(objectMapper.writeValueAsString(body), headers)
 
         restTemplate.postForObject<Order>(

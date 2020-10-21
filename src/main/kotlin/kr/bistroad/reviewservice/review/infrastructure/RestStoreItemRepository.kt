@@ -7,6 +7,7 @@ import kr.bistroad.reviewservice.review.domain.StoreItem
 import kr.bistroad.reviewservice.review.domain.StoreItemRepository
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
+import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
 import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.RestTemplate
@@ -32,7 +33,10 @@ class RestStoreItemRepository(
     override fun addReviewStar(storeId: UUID, itemId: UUID, review: Review) {
         val body = AddReviewStarBody(reviewId = review.id, stars = review.stars)
 
-        val headers = HttpHeaders().apply { this["Authorization-Role"] = "ROLE_ADMIN" }
+        val headers = HttpHeaders().apply {
+            this.contentType = MediaType.APPLICATION_JSON
+            this["Authorization-Role"] = "ROLE_ADMIN"
+        }
         val request = HttpEntity(objectMapper.writeValueAsString(body), headers)
 
         restTemplate.postForObject<StoreItem>(
@@ -44,7 +48,10 @@ class RestStoreItemRepository(
     override fun removeReviewStar(storeId: UUID, itemId: UUID, review: Review) {
         val body = RemoveReviewStarBody(reviewId = review.id)
 
-        val headers = HttpHeaders().apply { this["Authorization-Role"] = "ROLE_ADMIN" }
+        val headers = HttpHeaders().apply {
+            this.contentType = MediaType.APPLICATION_JSON
+            this["Authorization-Role"] = "ROLE_ADMIN"
+        }
         val request = HttpEntity(objectMapper.writeValueAsString(body), headers)
 
         restTemplate.postForObject<StoreItem>(
